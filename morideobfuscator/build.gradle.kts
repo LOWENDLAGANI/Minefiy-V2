@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "moe.rukamori.archivetune.morideobfuscator"
+    namespace = "com.minetallest.minefiy.morideobfuscator"
     compileSdk = 37
 
     defaultConfig {

@@ -25,15 +25,6 @@ fun String.asBuildConfigString(): String =
             .replace("\t", "\\t")
     }\""
 
-val fallbackDataServerUrl = "archive-tune-admin-remote.vercel.app"
-val dataServerUrl =
-    rootProject
-        .file("DataServer.txt")
-        .takeIf { it.isFile }
-        ?.readText()
-        ?.trim()
-        ?.takeIf { it.startsWith("https://") || it.startsWith("http://") }
-        ?: fallbackDataServerUrl
 val apiBearerToken = System.getenv("API_BEARER_TOKEN")?.trim()
     ?: localProperties.getProperty("API_BEARER_TOKEN")?.trim()
     ?: ""
@@ -57,14 +48,15 @@ val hasReleaseSigningConfig =
         releaseStorePassword != null &&
         releaseKeyAlias != null &&
         releaseKeyPassword != null
+
 android {
-    namespace = "moe.rukamori.archivetune"
+    namespace = "com.minetallest.minefiy"
     compileSdk = 37
     ndkVersion = "30.0.16248370"
     compileSdkMinor = 2
 
     defaultConfig {
-    applicationId = "moe.rukamori.archivetune"
+        applicationId = "com.minetallest.minefiy"
         minSdk = 26
         targetSdk = 37
         versionCode = 142
@@ -72,6 +64,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        // Single universal artifact: all supported ABIs in one APK.
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
+
+        manifestPlaceholders["discordRedirectScheme"] = discordRedirectScheme
 
         val lastfmApiKey =
             localProperties.getProperty("LASTFM_API_KEY")
@@ -90,7 +89,8 @@ android {
                 ?: ""
         buildConfigField("String", "TOGETHER_BEARER_TOKEN", "\"$togetherBearerToken\"")
 
-        buildConfigField("String", "DATA_SERVER_URL", dataServerUrl.asBuildConfigString())
+        // Personal build: the upstream data server / gatekeeper is intentionally unused.
+        buildConfigField("String", "DATA_SERVER_URL", "\"\"")
         buildConfigField("String", "API_BEARER_TOKEN", apiBearerToken.asBuildConfigString())
         buildConfigField("boolean", "GATEKEEPER_ENABLED", "false")
         buildConfigField("boolean", "LEAK_CANARY_TOGGLE_AVAILABLE", "false")
@@ -103,98 +103,19 @@ android {
                 ).trim()
         buildConfigField("String", "NIGHTLY_BUILD_HASH", "\"$nightlyBuildHash\"")
 
-        val nightlyVersionName =
-            providers.gradleProperty("nightlyVersionName").orNull?.trim().orEmpty()
-        if (nightlyVersionName.isNotEmpty()) {
-            versionName = nightlyVersionName
-        }
         buildConfigField("String", "DISTRIBUTION", "\"gms\"")
-        buildConfigField("boolean", "UPDATER_AVAILABLE", "true")
+        buildConfigField("String", "DEVICE", "\"mobile\"")
+        buildConfigField("String", "ARCHITECTURE", "\"universal\"")
+        buildConfigField("boolean", "UPDATER_AVAILABLE", "false")
 
-        val githubOwner =
-            System.getenv("GITHUB_OWNER")?.trim()
-                ?: localProperties.getProperty("GITHUB_OWNER")?.trim()
-                ?: "rukamori"
-        val githubRepo =
-            System.getenv("GITHUB_REPO")?.trim()
-                ?: localProperties.getProperty("GITHUB_REPO")?.trim()
-                ?: "ArchiveTune"
-        buildConfigField("String", "GITHUB_OWNER", githubOwner.asBuildConfigString())
-        buildConfigField("String", "GITHUB_REPO", githubRepo.asBuildConfigString())
+        buildConfigField("String", "DISCORD_APPLICATION_ID", "\"$discordApplicationId\"")
+        buildConfigField("long", "DISCORD_APPLICATION_ID_LONG", "${discordApplicationIdLong}L")
+        buildConfigField("String", "DISCORD_REDIRECT_SCHEME", "\"$discordRedirectScheme\"")
 
-        val releaseGithubOwner =
-            System.getenv("RELEASE_GITHUB_OWNER")?.trim()
-                ?: localProperties.getProperty("RELEASE_GITHUB_OWNER")?.trim()
-                ?: githubOwner
-        val releaseGithubRepo =
-            System.getenv("RELEASE_GITHUB_REPO")?.trim()
-                ?: localProperties.getProperty("RELEASE_GITHUB_REPO")?.trim()
-                ?: githubRepo
-        buildConfigField("String", "RELEASE_GITHUB_OWNER", releaseGithubOwner.asBuildConfigString())
-        buildConfigField("String", "RELEASE_GITHUB_REPO", releaseGithubRepo.asBuildConfigString())
-    }
-
-    flavorDimensions += listOf("distribution", "device", "abi")
-    productFlavors {
-        create("gms") {
-            dimension = "distribution"
-            isDefault = true
-            buildConfigField("String", "DISTRIBUTION", "\"gms\"")
-            buildConfigField("boolean", "UPDATER_AVAILABLE", "true")
-            buildConfigField("String", "DISCORD_APPLICATION_ID", "\"$discordApplicationId\"")
-            buildConfigField("long", "DISCORD_APPLICATION_ID_LONG", "${discordApplicationIdLong}L")
-            buildConfigField("String", "DISCORD_REDIRECT_SCHEME", "\"$discordRedirectScheme\"")
-            manifestPlaceholders["discordRedirectScheme"] = discordRedirectScheme
-        }
-        create("foss") {
-            dimension = "distribution"
-            buildConfigField("String", "DISTRIBUTION", "\"foss\"")
-            buildConfigField("boolean", "UPDATER_AVAILABLE", "true")
-            buildConfigField("String", "DISCORD_APPLICATION_ID", "\"$discordApplicationId\"")
-            buildConfigField("long", "DISCORD_APPLICATION_ID_LONG", "${discordApplicationIdLong}L")
-            buildConfigField("String", "DISCORD_REDIRECT_SCHEME", "\"$discordRedirectScheme\"")
-            manifestPlaceholders["discordRedirectScheme"] = discordRedirectScheme
-        }
-        create("mobile") {
-            dimension = "device"
-            buildConfigField("String", "DEVICE", "\"mobile\"")
-        }
-        create("tv") {
-            dimension = "device"
-            buildConfigField("String", "DEVICE", "\"tv\"")
-        }
-        create("automotive") {
-            dimension = "device"
-            minSdk = 28
-            buildConfigField("String", "DEVICE", "\"automotive\"")
-        }
-        create("universal") {
-            dimension = "abi"
-            ndk {
-                abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            }
-            buildConfigField("String", "ARCHITECTURE", "\"universal\"")
-        }
-        create("arm64") {
-            dimension = "abi"
-            ndk { abiFilters += "arm64-v8a" }
-            buildConfigField("String", "ARCHITECTURE", "\"arm64\"")
-        }
-        create("armeabi") {
-            dimension = "abi"
-            ndk { abiFilters += "armeabi-v7a" }
-            buildConfigField("String", "ARCHITECTURE", "\"armeabi\"")
-        }
-        create("x86") {
-            dimension = "abi"
-            ndk { abiFilters += "x86" }
-            buildConfigField("String", "ARCHITECTURE", "\"x86\"")
-        }
-        create("x86_64") {
-            dimension = "abi"
-            ndk { abiFilters += "x86_64" }
-            buildConfigField("String", "ARCHITECTURE", "\"x86_64\"")
-        }
+        buildConfigField("String", "GITHUB_OWNER", "\"minetallest\"")
+        buildConfigField("String", "GITHUB_REPO", "\"Minefiy\"")
+        buildConfigField("String", "RELEASE_GITHUB_OWNER", "\"minetallest\"")
+        buildConfigField("String", "RELEASE_GITHUB_REPO", "\"Minefiy\"")
     }
 
     signingConfigs {
@@ -210,9 +131,13 @@ android {
 
     buildTypes {
         release {
-            if (hasReleaseSigningConfig) {
-                signingConfig = signingConfigs.getByName("release")
-            }
+            // Personal build: fall back to the debug key so a release APK stays installable.
+            signingConfig =
+                if (hasReleaseSigningConfig) {
+                    signingConfigs.getByName("release")
+                } else {
+                    signingConfigs.getByName("debug")
+                }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -221,21 +146,8 @@ android {
             )
         }
         debug {
-            buildConfigField("boolean", "GATEKEEPER_ENABLED", "false")
             applicationIdSuffix = ".debug"
             isDebuggable = true
-        }
-        create("nightly") {
-            applicationIdSuffix = ".nightly"
-            isDebuggable = false
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            buildConfigField("boolean", "LEAK_CANARY_TOGGLE_AVAILABLE", "true")
-            matchingFallbacks += listOf("release")
         }
     }
 
@@ -313,7 +225,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling-preview:${libs.versions.compose.get()}")
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.leakcanary.android)
-    add("nightlyImplementation", libs.leakcanary.android)
     implementation(libs.compose.animation)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.reorderable)
@@ -357,9 +268,9 @@ dependencies {
     implementation(libs.media3.okhttp)
     implementation("androidx.media3:media3-ui:${libs.versions.media3.get()}")
     implementation("androidx.media3:media3-ui-compose:${libs.versions.media3.get()}")
-    add("gmsImplementation", libs.media3.cast)
-    add("gmsImplementation", libs.mediarouter)
-    add("gmsImplementation", "com.google.android.gms:play-services-auth:22.0.0")
+    implementation(libs.media3.cast)
+    implementation(libs.mediarouter)
+    implementation("com.google.android.gms:play-services-auth:22.0.0")
 
 
     implementation(libs.room.runtime)
@@ -416,7 +327,6 @@ dependencies {
 
 androidComponents {
     onVariants(selector().all()) { variant ->
-        if (variant.productFlavors.any { (_, flavor) -> flavor == "automotive" }) return@onVariants
         val capitalizedVariantName =
             variant.name.replaceFirstChar { character ->
                 if (character.isLowerCase()) character.titlecase() else character.toString()
@@ -426,7 +336,7 @@ androidComponents {
                 metadataFile.set(rootProject.layout.projectDirectory.file("IconPack/metadata.json"))
                 svgDirectory.set(rootProject.layout.projectDirectory.dir("IconPack/svg"))
                 applicationId.set(variant.applicationId)
-                targetActivityClassName.set("moe.rukamori.archivetune.MainActivity")
+                targetActivityClassName.set("com.minetallest.minefiy.MainActivity")
                 resourceOutputDirectory.set(
                     layout.buildDirectory.dir("generated/iconPack/${variant.name}/res"),
                 )

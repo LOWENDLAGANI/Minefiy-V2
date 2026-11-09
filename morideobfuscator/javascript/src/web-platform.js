@@ -2,7 +2,7 @@ import { URL, URLSearchParams } from "whatwg-url";
 
 const BASE64_ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-const PLAYER_SOURCE_ERROR_PREFIX = "ARCHIVETUNE_PLAYER_SOURCE_ERROR|";
+const PLAYER_SOURCE_ERROR_PREFIX = "MINEFIY_PLAYER_SOURCE_ERROR|";
 
 function encodeUtf8(value) {
   const encoded = unescape(encodeURIComponent(String(value)));
@@ -439,7 +439,7 @@ function playerSourceError(payload) {
 async function fetch(input, init = {}) {
   const request = new Request(input, init);
   if (isPlayerScriptRequest(request)) {
-    const source = await globalThis.__archiveTunePlayerSource(
+    const source = await globalThis.__minefiyPlayerSource(
       JSON.stringify({
         url: request.url,
         method: request.method,
@@ -455,7 +455,7 @@ async function fetch(input, init = {}) {
       url: request.url,
     });
   }
-  const responseJson = await globalThis.__archiveTuneHttp(
+  const responseJson = await globalThis.__minefiyHttp(
     JSON.stringify({
       url: request.url,
       method: request.method,
@@ -511,15 +511,15 @@ function installWebPlatform() {
   });
   globalThis.self = globalThis;
   globalThis.window = globalThis;
-  globalThis.navigator = globalThis.navigator || { userAgent: "ArchiveTune/Android" };
+  globalThis.navigator = globalThis.navigator || { userAgent: "Minefiy/Android" };
   globalThis.performance = globalThis.performance || { now: () => Date.now() };
   globalThis.crypto = globalThis.crypto || {
     getRandomValues(array) {
-      const random = base64ToBytes(globalThis.__archiveTuneRandom(array.byteLength));
+      const random = base64ToBytes(globalThis.__minefiyRandom(array.byteLength));
       array.set(random.subarray(0, array.length));
       return array;
     },
-    randomUUID: globalThis.__archiveTuneUuid,
+    randomUUID: globalThis.__minefiyUuid,
   };
 }
 

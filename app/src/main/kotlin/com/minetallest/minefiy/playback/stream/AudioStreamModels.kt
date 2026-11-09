@@ -1,0 +1,72 @@
+/*
+ * Minefiy (2026) — © minetallest
+ * Based on ArchiveTune — © Rukamori — github.com/rukamori
+ * GPL-3.0 License | Contributors: see git history
+ * Do not remove or alter this notice. - Per GPL-3.0 Section 4 & Section 5
+ */
+
+package com.minetallest.minefiy.playback.stream
+
+import com.minetallest.minefiy.constants.AudioQuality
+import com.minetallest.minefiy.innertube.PlaybackAuthState
+
+enum class StreamPurpose {
+    PLAYBACK,
+    DOWNLOAD,
+}
+
+enum class StreamSource {
+    YOUTUBEI,
+    MODULE,
+}
+
+data class AudioStreamRequest(
+    val mediaId: String,
+    val playlistId: String? = null,
+    val quality: AudioQuality,
+    val networkMetered: Boolean,
+    val purpose: StreamPurpose,
+    val authState: PlaybackAuthState,
+    val pinnedFormatId: Int? = null,
+    val requiresSongMetadata: Boolean = false,
+    val moduleMetadata: com.minetallest.minefiy.modules.ModuleMatchMetadata? = null,
+    val allowModules: Boolean = true,
+)
+
+data class ResolvedAudioStream(
+    val url: String,
+    val requestHeaders: Map<String, String>,
+    val formatId: Int,
+    val mimeType: String,
+    val codecs: String,
+    val bitrate: Int,
+    val sampleRate: Int?,
+    val contentLength: Long,
+    val expiresAtMs: Long,
+    val authFingerprint: String,
+    val source: StreamSource,
+    val runtimeVersion: String? = null,
+    val title: String? = null,
+    val durationSeconds: Int? = null,
+    val thumbnailUrl: String? = null,
+    val loudnessDb: Double? = null,
+    val perceptualLoudnessDb: Double? = null,
+    val playbackTrackingUrl: String? = null,
+    val moduleSelection: com.minetallest.minefiy.modules.ModuleAudioSelection? = null,
+)
+
+fun com.minetallest.minefiy.modules.ModuleAudioSelection.toResolvedAudioStream() = ResolvedAudioStream(
+    url = stream.url,
+    requestHeaders = stream.headers,
+    formatId = -1,
+    mimeType = stream.mimeType,
+    codecs = stream.codecs,
+    bitrate = stream.bitrate,
+    sampleRate = stream.sampleRate,
+    contentLength = stream.contentLength,
+    expiresAtMs = stream.expiresAtMs,
+    authFingerprint = module.revision,
+    source = StreamSource.MODULE,
+    runtimeVersion = module.manifest.version,
+    moduleSelection = this,
+)

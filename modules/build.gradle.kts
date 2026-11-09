@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "moe.rukamori.archivetune.modules"
+    namespace = "com.minetallest.minefiy.modules"
     compileSdk = 37
     defaultConfig { minSdk = 26 }
     compileOptions {

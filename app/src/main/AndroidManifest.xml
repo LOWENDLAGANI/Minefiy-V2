@@ -24,6 +24,14 @@
         android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
     <queries>
         <intent>
@@ -58,18 +66,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="false"
-        android:theme="@style/Theme.ArchiveTune"
+        android:theme="@style/Theme.Minefiy"
         tools:targetApi="tiramisu">
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+
+        <activity
+            android:name=".musicrecognition.MusicRecognitionCaptureActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:theme="@style/Theme.Minefiy.Transparent" />
+
+        <service
+            android:name=".musicrecognition.BackgroundMusicRecognitionService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection|microphone"
+            android:stopWithTask="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.minetallest.minefiy.cast.MinefiyCastOptionsProvider" />
 
         <activity
             android:name=".MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.ArchiveTune"
+            android:theme="@style/Theme.Minefiy"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -93,7 +126,7 @@
 
                 <data
                     android:host="together"
-                    android:scheme="archivetune" />
+                    android:scheme="minefiy" />
             </intent-filter>
 
             <!-- Youtube filter -->
@@ -192,12 +225,12 @@
             android:name=".modules.ModuleAuthorizationActivity"
             android:exported="true"
             android:excludeFromRecents="true"
-            android:theme="@style/Theme.ArchiveTune.Transparent">
+            android:theme="@style/Theme.Minefiy.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="archivetune" android:host="module-session" />
+                <data android:scheme="minefiy" android:host="module-session" />
             </intent-filter>
         </activity>
 
@@ -205,12 +238,12 @@
             android:name=".musicrecognition.MusicRecognitionTileActionActivity"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:theme="@style/Theme.ArchiveTune.Transparent" />
+            android:theme="@style/Theme.Minefiy.Transparent" />
 
         <activity
             android:name=".RestoreBackupFileActivity"
             android:exported="true"
-            android:theme="@style/Theme.ArchiveTune"
+            android:theme="@style/Theme.Minefiy"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -413,14 +446,14 @@
             android:name=".DebugActivity"
             android:exported="true"
             android:process=":crash"
-            android:theme="@style/Theme.ArchiveTune">
+            android:theme="@style/Theme.Minefiy">
         </activity>
 
         <activity
             android:name=".discord.DiscordOAuthCallbackActivity"
             android:exported="true"
             android:noHistory="true"
-            android:theme="@style/Theme.ArchiveTune">
+            android:theme="@style/Theme.Minefiy">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

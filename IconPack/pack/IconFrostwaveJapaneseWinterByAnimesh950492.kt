@@ -1,4 +1,4 @@
-package moe.rukamori.iconpack
+package com.minetallest.minefiy.iconpack
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor

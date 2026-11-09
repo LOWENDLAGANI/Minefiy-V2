@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🎨 ArchiveTune Icon Pack
+# 🎨 Minefiy Icon Pack
 
-**A curated collection of beautiful, community-crafted icons for [ArchiveTune](https://github.com/koiverse)**
+**A curated collection of beautiful, community-crafted icons for [Minefiy](https://github.com/koiverse)**
 
-[![Icons](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Frukamori%2FArchiveTuneIconPack%2Fmain%2Fmetadata.json&query=%24.length&label=Icons&color=blueviolet&style=for-the-badge)](#icon-gallery)
+[![Icons](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Frukamori%2FMinefiyIconPack%2Fmain%2Fmetadata.json&query=%24.length&label=Icons&color=blueviolet&style=for-the-badge)](#icon-gallery)
 [![Contributors](https://img.shields.io/badge/Contributors-4-orange?style=for-the-badge)](#contributors)
 [![License](https://img.shields.io/badge/License-Community-green?style=for-the-badge)](#license)
 
@@ -14,7 +14,7 @@
 
 ## 📖 About
 
-**ArchiveTune Icon Pack** is an open, community-driven collection of custom icons designed for ArchiveTune. Every icon in this pack is crafted by a talented member of the community — each one unique, expressive, and made with care.
+**Minefiy Icon Pack** is an open, community-driven collection of custom icons designed for Minefiy. Every icon in this pack is crafted by a talented member of the community — each one unique, expressive, and made with care.
 
 Whether you're looking for a sleek aesthetic, a festive vibe, or a bold neon style, there's something here for everyone. Have your own design? **Contributions are welcome!**
 
@@ -71,7 +71,7 @@ community redistribution.
 
 ## 📄 License
 
-All icons in this pack are contributed by community members. Rights belong to their respective authors. By submitting an icon, you grant the ArchiveTune community permission to use and distribute it as part of this pack.
+All icons in this pack are contributed by community members. Rights belong to their respective authors. By submitting an icon, you grant the Minefiy community permission to use and distribute it as part of this pack.
 
 By submitting an icon, you confirm that you own or are authorized to
 license the submitted work, and you agree to license it under the
@@ -82,6 +82,6 @@ Creative Commons Attribution-ShareAlike 4.0 International license
 
 <div align="center">
 
-Made with ❤️ by the **ArchiveTune Community**
+Made with ❤️ by the **Minefiy Community**
 
 </div>

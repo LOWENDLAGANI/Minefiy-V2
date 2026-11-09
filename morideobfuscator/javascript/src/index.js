@@ -59,19 +59,19 @@ class AndroidCache {
   }
 
   async get(key) {
-    const encoded = await globalThis.__archiveTuneCacheRead(String(key));
+    const encoded = await globalThis.__minefiyCacheRead(String(key));
     return encoded ? base64ToBytes(encoded).buffer : undefined;
   }
 
   async set(key, value) {
     const bytes = value instanceof ArrayBuffer ? new Uint8Array(value) : new Uint8Array(value.buffer);
-    await globalThis.__archiveTuneCacheWrite(
+    await globalThis.__minefiyCacheWrite(
       JSON.stringify({ key: String(key), value: bytesToBase64(bytes) }),
     );
   }
 
   async remove(key) {
-    await globalThis.__archiveTuneCacheRemove(String(key));
+    await globalThis.__minefiyCacheRemove(String(key));
   }
 }
 
@@ -79,8 +79,8 @@ Platform.load({
   runtime: "unknown",
   server: true,
   Cache: AndroidCache,
-  sha1Hash: globalThis.__archiveTuneSha1,
-  uuidv4: globalThis.__archiveTuneUuid,
+  sha1Hash: globalThis.__minefiySha1,
+  uuidv4: globalThis.__minefiyUuid,
   eval(data, environment) {
     const names = Object.keys(environment || {});
     const values = names.map((name) => environment[name]);
@@ -590,7 +590,7 @@ async function resolveCatalogReplacement(youtube, request, sourceInfo) {
 
   const candidate = candidates[0];
   const videoPoToken = normalizedString(
-    await globalThis.__archiveTuneVideoPoToken(candidate.id),
+    await globalThis.__minefiyVideoPoToken(candidate.id),
   );
   if (!videoPoToken) {
     const error = new Error("youtubei.js could not mint a content-bound playback token");
@@ -754,7 +754,7 @@ async function resolvePrepared(requestJson) {
   }
 }
 
-globalThis.ArchiveTuneYoutubei = Object.freeze({
+globalThis.MinefiyYoutubei = Object.freeze({
   version: RUNTIME_VERSION,
   prepare,
   resolvePrepared,

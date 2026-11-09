@@ -1,0 +1,36 @@
+/*
+ * Minefiy (2026) — © minetallest
+ * Based on ArchiveTune — © Rukamori — github.com/rukamori
+ * GPL-3.0 License | Contributors: see git history
+ * Do not remove or alter this notice. - Per GPL-3.0 Section 4 & Section 5
+ */
+
+package com.minetallest.minefiy.cast
+
+import android.content.Context
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import kotlinx.coroutines.flow.StateFlow
+
+fun interface CastMediaItemResolver {
+    fun resolveForCast(mediaItem: MediaItem): MediaItem
+
+    fun resolveForCastBlocking(mediaItem: MediaItem): MediaItem = resolveForCast(mediaItem)
+
+    fun mimeTypeForCast(mediaItem: MediaItem): String? = null
+}
+
+interface CastPlaybackRepository {
+    val screenState: StateFlow<CastScreenState>
+
+    fun createPlayer(
+        context: Context,
+        localPlayer: ExoPlayer,
+        mediaItemResolver: CastMediaItemResolver,
+    ): Player
+
+    fun disconnect()
+
+    fun setVolume(volume: Float)
+}
