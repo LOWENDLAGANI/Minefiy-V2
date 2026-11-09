@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Built-in launcher icon preview shown on the app-icon picker and onboarding. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="185dp"
-    android:height="185dp"
-    android:viewportWidth="185"
-    android:viewportHeight="185">
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
 
     <path
-        android:fillColor="#fefffe"
-        android:fillAlpha="0.92"
-        android:strokeAlpha="0.92"
-        android:strokeWidth="1"
-        android:pathData="M 136.5,42.5 C 139.572,42.1826 142.572,42.5159 145.5,43.5C 147.696,46.5596
-149.363,49.893 150.5,53.5C 141.188,70.7896 131.355,87.7896 121,104.5C
-115.248,101.04 109.415,97.7069 103.5,94.5C 108.706,84.5868 114.04,74.7535
-119.5,65C 93.5133,65.9659 67.5133,67.1326 41.5,68.5C 41.5,61.1667 41.5,53.8333
-41.5,46.5C 73.3416,45.5964 105.008,44.2631 136.5,42.5 Z" />
+        android:pathData="M12,0 L36,0 A12,12 0 0 1 48,12 L48,36 A12,12 0 0 1 36,48 L12,48 A12,12 0 0 1 0,36 L0,12 A12,12 0 0 1 12,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="48"
+                android:endY="48"
+                android:type="linear">
+                <item android:offset="0" android:color="#FF1D1633" />
+                <item android:offset="1" android:color="#FF0B0912" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
     <path
-        android:fillColor="#fefffe"
-        android:fillAlpha="0.914"
-        android:strokeAlpha="0.914"
-        android:strokeWidth="1"
-        android:pathData="M 77.5,75.5 C 84.8406,76.1159 92.174,76.7826 99.5,77.5C 97.8365,97.8139
-94.3365,117.814 89,137.5C 87.8225,142.225 85.9892,146.559 83.5,150.5C
-76.3087,148.954 69.3087,146.954 62.5,144.5C 69.9692,122.011 74.9692,99.011
-77.5,75.5 Z" />
+        android:pathData="M15,33 L15,17 L24,26 L33,17 L33,33"
+        android:strokeColor="#FFF3E4"
+        android:strokeWidth="3.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:pathData="M19,35.5 L29,35.5"
+        android:strokeColor="#FFFF8A5C"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round" />
 </vector>

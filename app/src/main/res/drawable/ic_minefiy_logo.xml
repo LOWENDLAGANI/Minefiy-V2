@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reusable Minefiy logo: squircle badge with the M monogram. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <path
+        android:pathData="M12,0 L36,0 A12,12 0 0 1 48,12 L48,36 A12,12 0 0 1 36,48 L12,48 A12,12 0 0 1 0,36 L0,12 A12,12 0 0 1 12,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="48"
+                android:endY="48"
+                android:type="linear">
+                <item android:offset="0" android:color="#FF1D1633" />
+                <item android:offset="1" android:color="#FF0B0912" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:pathData="M15,33 L15,17 L24,26 L33,17 L33,33"
+        android:strokeColor="#FFF3E4"
+        android:strokeWidth="3.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:pathData="M19,35.5 L29,35.5"
+        android:strokeColor="#FFFF8A5C"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round" />
+</vector>

@@ -871,24 +871,11 @@ private fun AboutIdentity(
 
 @Composable
 private fun SurfaceAppIcon(modifier: Modifier = Modifier) {
-    androidx.compose.material3.Surface(
-        modifier = modifier,
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    ) {
-        val iconTint = MaterialTheme.colorScheme.onPrimaryContainer
-        val iconColorFilter = remember(iconTint) { ColorFilter.tint(iconTint) }
-        Image(
-            painter = painterResource(R.drawable.about_splash),
-            contentDescription = null,
-            colorFilter = iconColorFilter,
-            modifier =
-                Modifier
-                    .padding(AboutSpacing.sm)
-                    .size(64.dp),
-        )
-    }
+    Image(
+        painter = painterResource(R.drawable.ic_minefiy_logo),
+        contentDescription = null,
+        modifier = modifier.size(64.dp),
+    )
 }
 
 @Composable
