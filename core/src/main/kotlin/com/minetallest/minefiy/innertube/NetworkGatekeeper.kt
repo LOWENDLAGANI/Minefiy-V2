@@ -25,9 +25,7 @@ object NetworkGatekeeper : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (connectionBlocked.get()) {
             throw IOException(
-                "Connection blocked by Minefiy Remote. This app could not be verified as an " +
-                    "official Minefiy build. Install an official build from " +
-                    "https://github.com/minetallest/Minefiy or https://t.me/MinefiyGC.",
+                "Connection blocked by Minefiy Remote. This build could not be verified.",
             )
         }
         return chain.proceed(chain.request())

@@ -152,7 +152,7 @@ object DiscordImageResolver {
             }
 
             "appicon" -> {
-                "https://raw.githubusercontent.com/minetallest/Minefiy/main/fastlane/metadata/android/en-US/images/icon.png"
+                "https://raw.githubusercontent.com/LOWENDLAGANI/Minefiy-V2/main/fastlane/metadata/android/en-US/images/icon.png"
             }
 
             "custom" -> {

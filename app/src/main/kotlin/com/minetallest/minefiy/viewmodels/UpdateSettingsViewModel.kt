@@ -107,7 +107,7 @@ class UpdateSettingsViewModel
                 is UpdateSettingsAction.SetNotificationsEnabled -> setNotificationsEnabled(action.enabled)
                 UpdateSettingsAction.JoinEarlyAccess ->
                     eventChannel.trySend(
-                        UpdateSettingsEvent.OpenUri("https://github.com/minetallest/Minefiy"),
+                        UpdateSettingsEvent.OpenUri("https://github.com/LOWENDLAGANI/Minefiy-V2"),
                     )
                 UpdateSettingsAction.EarlyAccessLinkFailed -> error.value = R.string.early_access_open_failed
                 UpdateSettingsAction.DismissError -> error.value = null

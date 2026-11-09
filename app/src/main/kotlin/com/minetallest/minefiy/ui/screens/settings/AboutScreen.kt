@@ -959,17 +959,10 @@ private fun AboutProjectInformationSection(
         verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
     ) {
         AboutActionListItem(
-            title = stringResource(R.string.about_contributor_translation),
-            iconResId = R.drawable.translate,
-            index = 0,
-            itemCount = 2,
-            onClick = onOpenTranslationContributors,
-        )
-        AboutActionListItem(
             title = stringResource(R.string.about_license),
             iconResId = R.drawable.info,
-            index = 1,
-            itemCount = 2,
+            index = 0,
+            itemCount = 1,
             onClick = onOpenDependencyLicenses,
         )
     }

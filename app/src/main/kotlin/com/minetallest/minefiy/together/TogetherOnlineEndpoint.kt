@@ -14,6 +14,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import com.minetallest.minefiy.BuildConfig
 import com.minetallest.minefiy.constants.TogetherOnlineEndpointCacheKey
 import com.minetallest.minefiy.constants.TogetherOnlineEndpointLastCheckedAtKey
 import com.minetallest.minefiy.utils.getAsync
@@ -21,8 +22,12 @@ import java.net.URI
 import java.util.concurrent.TimeUnit
 
 object TogetherOnlineEndpoint {
-    private const val EndpointSourceUrl =
-        "https://raw.githubusercontent.com/minetallest/Minefiy/refs/heads/dev/MinefiyKoiverseServer.txt"
+    /**
+     * Personal build: supply your own Together server manifest through
+     * `TOGETHER_ENDPOINT_SOURCE_URL` in local.properties (or the environment).
+     * When unset, online rooms stay offline instead of contacting a dead remote URL.
+     */
+    private val endpointSourceUrl: String = BuildConfig.TOGETHER_ENDPOINT_SOURCE_URL.trim()
 
     private const val CacheTtlMs: Long = 6 * 60 * 60 * 1000L
 
@@ -68,8 +73,10 @@ object TogetherOnlineEndpoint {
     }
 
     private suspend fun fetchEndpointFromSourceOrNull(): String? {
+        val sourceUrl = endpointSourceUrl
+        if (sourceUrl.isBlank()) return null
         val text =
-            runCatching { httpClient.get(EndpointSourceUrl).bodyAsText() }
+            runCatching { httpClient.get(sourceUrl).bodyAsText() }
                 .getOrNull()
                 ?.trim()
                 .orEmpty()

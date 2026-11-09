@@ -340,7 +340,7 @@ fun DiscordSettings(navController: NavController) {
     val (button2CustomUrl) =
         rememberPreference(
             key = DiscordActivityButton2CustomUrlKey,
-            defaultValue = "https://github.com/minetallest/Minefiy",
+            defaultValue = "https://github.com/LOWENDLAGANI/Minefiy-V2",
         )
 
     val (activityType, onActivityTypeChange) =
@@ -1201,7 +1201,7 @@ fun RichPresence(
     button2Label: String = "Go to Minefiy",
     button2Enabled: Boolean = true,
     button2UrlSource: String = "custom",
-    button2CustomUrl: String = "https://github.com/minetallest/Minefiy",
+    button2CustomUrl: String = "https://github.com/LOWENDLAGANI/Minefiy-V2",
     isPlaying: Boolean = false,
 ) {
     val context = LocalContext.current
@@ -1312,7 +1312,7 @@ fun RichPresence(
                                 when (largeImageType.lowercase()) {
                                     "thumbnail" -> song?.song?.thumbnailUrl
                                     "artist" -> song?.artists?.firstOrNull()?.thumbnailUrl
-                                    "appicon" -> "https://raw.githubusercontent.com/minetallest/Minefiy/main/fastlane/metadata/android/en-US/images/icon.png"
+                                    "appicon" -> "https://raw.githubusercontent.com/LOWENDLAGANI/Minefiy-V2/main/fastlane/metadata/android/en-US/images/icon.png"
                                     "custom" -> largeImageCustomUrl.ifBlank { song?.song?.thumbnailUrl }
                                     else -> song?.song?.thumbnailUrl
                                 }
@@ -1342,7 +1342,7 @@ fun RichPresence(
                                 when (smallImageType.lowercase()) {
                                     "thumbnail" -> songThumb
                                     "artist" -> artistThumb
-                                    "appicon" -> "https://raw.githubusercontent.com/minetallest/Minefiy/main/fastlane/metadata/android/en-US/images/icon.png"
+                                    "appicon" -> "https://raw.githubusercontent.com/LOWENDLAGANI/Minefiy-V2/main/fastlane/metadata/android/en-US/images/icon.png"
                                     "custom" -> smallImageCustomUrl.takeIf { it.isNotBlank() } ?: songThumb
                                     "dontshow", "none" -> null
                                     else -> artistThumb

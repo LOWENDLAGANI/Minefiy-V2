@@ -88,7 +88,7 @@ fun DiscordExperimental(navController: NavController) {
     val (button2CustomUrl, onButton2CustomUrlChange) =
         rememberPreference(
             key = DiscordActivityButton2CustomUrlKey,
-            defaultValue = "https://github.com/minetallest/Minefiy",
+            defaultValue = "https://github.com/LOWENDLAGANI/Minefiy-V2",
         )
 
     Scaffold { inner ->

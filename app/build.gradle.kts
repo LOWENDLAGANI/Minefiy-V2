@@ -59,8 +59,9 @@ android {
         applicationId = "com.minetallest.minefiy"
         minSdk = 26
         targetSdk = 37
-        versionCode = 142
-        versionName = "15.1.0"
+        // Minefiy's own release numbering (the upstream 15.x / 142 line is no longer followed).
+        versionCode = 1
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -93,7 +94,6 @@ android {
         buildConfigField("String", "DATA_SERVER_URL", "\"\"")
         buildConfigField("String", "API_BEARER_TOKEN", apiBearerToken.asBuildConfigString())
         buildConfigField("boolean", "GATEKEEPER_ENABLED", "false")
-        buildConfigField("boolean", "LEAK_CANARY_TOGGLE_AVAILABLE", "false")
 
         val nightlyBuildHash =
             (
@@ -108,14 +108,26 @@ android {
         buildConfigField("String", "ARCHITECTURE", "\"universal\"")
         buildConfigField("boolean", "UPDATER_AVAILABLE", "false")
 
+        // Personal build: Together rooms read their endpoint from your own server manifest.
+        // Leave empty to keep online rooms disabled (no dead remote URL is contacted).
+        val togetherEndpointSourceUrl =
+            localProperties.getProperty("TOGETHER_ENDPOINT_SOURCE_URL")
+                ?: System.getenv("TOGETHER_ENDPOINT_SOURCE_URL")
+                ?: ""
+        buildConfigField(
+            "String",
+            "TOGETHER_ENDPOINT_SOURCE_URL",
+            togetherEndpointSourceUrl.asBuildConfigString(),
+        )
+
         buildConfigField("String", "DISCORD_APPLICATION_ID", "\"$discordApplicationId\"")
         buildConfigField("long", "DISCORD_APPLICATION_ID_LONG", "${discordApplicationIdLong}L")
         buildConfigField("String", "DISCORD_REDIRECT_SCHEME", "\"$discordRedirectScheme\"")
 
-        buildConfigField("String", "GITHUB_OWNER", "\"minetallest\"")
-        buildConfigField("String", "GITHUB_REPO", "\"Minefiy\"")
-        buildConfigField("String", "RELEASE_GITHUB_OWNER", "\"minetallest\"")
-        buildConfigField("String", "RELEASE_GITHUB_REPO", "\"Minefiy\"")
+        buildConfigField("String", "GITHUB_OWNER", "\"LOWENDLAGANI\"")
+        buildConfigField("String", "GITHUB_REPO", "\"Minefiy-V2\"")
+        buildConfigField("String", "RELEASE_GITHUB_OWNER", "\"LOWENDLAGANI\"")
+        buildConfigField("String", "RELEASE_GITHUB_REPO", "\"Minefiy-V2\"")
     }
 
     signingConfigs {
@@ -147,7 +159,18 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
-            isDebuggable = true
+            // Personal build: no dev-only tooling is wired into this variant any more, so it is
+            // built exactly like release (R8 + resource shrinking + non-debuggable ART).
+            // A debuggable build is JIT-only and several times slower; this keeps the dev
+            // package fast while still installing next to the release app.
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("debug")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -224,7 +247,6 @@ dependencies {
     compileOnly("androidx.compose.ui:ui-tooling-preview:${libs.versions.compose.get()}")
     debugImplementation("androidx.compose.ui:ui-tooling-preview:${libs.versions.compose.get()}")
     debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.leakcanary.android)
     implementation(libs.compose.animation)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.reorderable)

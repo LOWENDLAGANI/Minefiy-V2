@@ -123,7 +123,6 @@ class App :
         }
         BotGuardTokenGenerator.initialize(this)
         PreferenceStore.start(this)
-        LeakCanaryController.initialize(this)
         Timber.plant(Timber.DebugTree())
         try {
             Timber.plant(
