@@ -734,15 +734,17 @@ private fun AboutSuccessContent(
             }
         }
 
-        item(key = "contributors", contentType = "about_contributors") {
-            AboutContentContainer {
-                ContributorsSection(
-                    state = model.contributorsState,
-                    readMoreUrl = model.contributorsReadMoreUrl,
-                    onOpenProfile = onOpenUri,
-                    onRetry = onRetryContributors,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+        if (model.contributorsState is AboutContributorsUiState.Success) {
+            item(key = "contributors", contentType = "about_contributors") {
+                AboutContentContainer {
+                    ContributorsSection(
+                        state = model.contributorsState,
+                        readMoreUrl = model.contributorsReadMoreUrl,
+                        onOpenProfile = onOpenUri,
+                        onRetry = onRetryContributors,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
         }
     }

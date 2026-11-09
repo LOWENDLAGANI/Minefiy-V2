@@ -263,7 +263,9 @@ class AboutViewModel
         private var activeDialog = AboutDialog.NONE
 
         init {
-            loadContributors()
+            // Personal build: there is no upstream contributors feed to read.
+            contributorsState = AboutContributorsUiState.Empty
+            updateState()
         }
 
         fun retryContributors() {
