@@ -50,6 +50,7 @@ import com.minetallest.minefiy.ui.screens.search.OnlineSearchResultRoute
 import com.minetallest.minefiy.ui.screens.search.OnlineSearchResultRoutePrefix
 import com.minetallest.minefiy.ui.screens.search.SearchScreen
 import com.minetallest.minefiy.ui.screens.settings.AboutScreen
+import com.minetallest.minefiy.ui.screens.settings.AdminPanelScreen
 import com.minetallest.minefiy.ui.screens.settings.AccountSettings
 import com.minetallest.minefiy.ui.screens.settings.AiIntegrationSettings
 import com.minetallest.minefiy.ui.screens.settings.AodCustomizedScreen
@@ -479,6 +480,11 @@ fun NavGraphBuilder.navigationBuilder(
     }
     composable("settings/about") {
         AboutScreen(navController)
+    }
+    // Reached only by ten taps on the About logo. Hidden, not secured: what
+    // protects the policy is the Firestore rule, not the route.
+    composable("settings/admin") {
+        AdminPanelScreen(navController)
     }
     composable("customize_background") {
         CustomizeBackground(navController)

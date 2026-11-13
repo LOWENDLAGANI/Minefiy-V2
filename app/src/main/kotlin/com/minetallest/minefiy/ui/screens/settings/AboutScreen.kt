@@ -10,6 +10,8 @@
 package com.minetallest.minefiy.ui.screens.settings
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +60,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -118,6 +122,7 @@ fun AboutScreen(
         state = state,
         scrollBehavior = scrollBehavior,
         onNavigateUp = navController::navigateUp,
+        onOpenAdmin = { navController.navigate(ADMIN_ROUTE) },
         onNavigateHome = navController::backToMain,
         onOpenUri = viewModel::openUri,
         onRetryContributors = viewModel::retryContributors,
@@ -135,6 +140,7 @@ private fun AboutScreenContent(
     state: AboutScreenState,
     scrollBehavior: TopAppBarScrollBehavior,
     onNavigateUp: () -> Unit,
+    onOpenAdmin: () -> Unit,
     onNavigateHome: () -> Unit,
     onOpenUri: (String) -> Unit,
     onRetryContributors: () -> Unit,
@@ -801,6 +807,7 @@ private fun AboutIdentityCard(
                     AboutIdentity(
                         model = model,
                         horizontalAlignment = Alignment.Start,
+                        onOpenAdmin = onOpenAdmin,
                         modifier = Modifier.weight(1f),
                     )
                     LinkChipRow(
@@ -822,6 +829,7 @@ private fun AboutIdentityCard(
                     AboutIdentity(
                         model = model,
                         horizontalAlignment = Alignment.CenterHorizontally,
+                        onOpenAdmin = onOpenAdmin,
                     )
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     LinkChipRow(
@@ -840,6 +848,7 @@ private fun AboutIdentityCard(
 private fun AboutIdentity(
     model: AboutUiModel,
     horizontalAlignment: Alignment.Horizontal,
+    onOpenAdmin: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -847,7 +856,7 @@ private fun AboutIdentity(
         horizontalAlignment = horizontalAlignment,
         verticalArrangement = Arrangement.spacedBy(AboutSpacing.sm),
     ) {
-        SurfaceAppIcon()
+        SurfaceAppIcon(onOpenAdmin = onOpenAdmin)
         Text(
             text = stringResource(model.appNameResId),
             style = MaterialTheme.typography.headlineSmallEmphasized,
@@ -868,12 +877,53 @@ private fun AboutIdentity(
     }
 }
 
+/** Ten taps inside four seconds opens the admin panel. */
+private const val ADMIN_TAP_COUNT = 10
+
+private const val ADMIN_TAP_WINDOW_MILLIS = 4_000L
+
+private const val ADMIN_ROUTE = "settings/admin"
+
+/**
+ * The logo, and the way into the panel.
+ *
+ * The gesture is a hiding place, not a lock: it keeps the panel away from
+ * someone scrolling through settings, and nothing more. What protects the policy
+ * is the Firestore rule that only the owner's account may write it — so the
+ * gesture being discoverable costs nothing.
+ */
 @Composable
-private fun SurfaceAppIcon(modifier: Modifier = Modifier) {
+private fun SurfaceAppIcon(
+    onOpenAdmin: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var taps by remember { mutableStateOf(0) }
+    var windowStart by remember { mutableStateOf(0L) }
+
     Image(
         painter = painterResource(R.drawable.ic_minefiy_logo),
         contentDescription = null,
-        modifier = modifier.size(64.dp),
+        modifier =
+            modifier
+                .size(64.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
+                    val now = System.currentTimeMillis()
+
+                    if (now - windowStart > ADMIN_TAP_WINDOW_MILLIS) {
+                        windowStart = now
+                        taps = 0
+                    }
+
+                    taps += 1
+
+                    if (taps >= ADMIN_TAP_COUNT) {
+                        taps = 0
+                        onOpenAdmin()
+                    }
+                },
     )
 }
 

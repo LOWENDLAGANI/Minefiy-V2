@@ -95,6 +95,24 @@ android {
         buildConfigField("String", "API_BEARER_TOKEN", apiBearerToken.asBuildConfigString())
         buildConfigField("boolean", "GATEKEEPER_ENABLED", "false")
 
+        // Personal build: the lockdown policy lives in one Firestore document and is
+        // reached over HTTPS, so no google-services.json is needed and the APK carries
+        // no Play-services Firebase. Empty values leave the whole feature inert.
+        val firebaseProjectId =
+            (
+                localProperties.getProperty("FIREBASE_PROJECT_ID")
+                    ?: System.getenv("FIREBASE_PROJECT_ID")
+                    ?: ""
+                ).trim()
+        val firebaseApiKey =
+            (
+                localProperties.getProperty("FIREBASE_API_KEY")
+                    ?: System.getenv("FIREBASE_API_KEY")
+                    ?: ""
+                ).trim()
+        buildConfigField("String", "FIREBASE_PROJECT_ID", firebaseProjectId.asBuildConfigString())
+        buildConfigField("String", "FIREBASE_API_KEY", firebaseApiKey.asBuildConfigString())
+
         val nightlyBuildHash =
             (
                 localProperties.getProperty("NIGHTLY_BUILD_HASH")

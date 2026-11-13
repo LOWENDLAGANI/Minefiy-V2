@@ -1133,6 +1133,28 @@
     <string name="scheduled_backup_load_failed">Scheduled backup settings could not be loaded</string>
     <string name="scheduled_backup_update_failed">Scheduled backup settings could not be saved</string>
     <string name="gatekeeper_connection_blocked">Network access is unavailable right now.</string>
+
+    <!-- Lockdown (Firestore policy) -->
+    <string name="lockdown_title">Minefiy is locked</string>
+    <string name="lockdown_default_message">This build has been paused by the owner.</string>
+    <string name="lockdown_update_required">Update the app to keep using it.</string>
+    <string name="lockdown_retry">Check again</string>
+    <string name="lockdown_checking">Checking…</string>
+
+    <!-- Admin panel, hidden behind ten taps on the About logo -->
+    <string name="admin_panel">Admin panel</string>
+    <string name="admin_not_configured">Firebase is not configured in this build. Add FIREBASE_PROJECT_ID and FIREBASE_API_KEY to local.properties and rebuild.</string>
+    <string name="admin_sign_in_hint">Sign in with the Firebase account the security rules allow. The panel writes the policy every installed app reads.</string>
+    <string name="admin_email">Email</string>
+    <string name="admin_password">Password</string>
+    <string name="admin_sign_in">Sign in</string>
+    <string name="admin_sign_out">Sign out</string>
+    <string name="admin_signed_in">Signed in</string>
+    <string name="admin_lock_all">Lock every device</string>
+    <string name="admin_lock_all_desc">Blocks the app on every install the next time it checks in.</string>
+    <string name="admin_message">Message shown when locked</string>
+    <string name="admin_min_version">Minimum version code (0 disables)</string>
+    <string name="admin_save">Save policy</string>
     <string name="local_songs_metadata_unavailable">Imported %1$d songs. Online metadata is unavailable; file tags were kept.</string>
     <string name="modules_session_verify">Verify connection</string>
     <string name="modules_session_connected">Module connection verified</string>

@@ -327,6 +327,10 @@ import com.minetallest.minefiy.utils.reportException
 import com.minetallest.minefiy.utils.setAppLocale
 import com.minetallest.minefiy.viewmodels.BackupCategory
 import com.minetallest.minefiy.viewmodels.BackupRestoreViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import com.minetallest.minefiy.lockdown.LockdownViewModel
+import com.minetallest.minefiy.ui.component.LockdownGate
 import com.minetallest.minefiy.viewmodels.GatekeeperViewModel
 import com.minetallest.minefiy.viewmodels.HomeViewModel
 import com.minetallest.minefiy.viewmodels.MainMenuViewModel
@@ -638,6 +642,25 @@ class MainActivity : ComponentActivity() {
                 gatekeeperViewModel.blockedMessages.collect { message ->
                     Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                 }
+            }
+
+            // The lockdown covers whatever is on screen — player, settings, an open
+            // dialog — so no screen has to know it exists. Null policy means free.
+            val lockdownViewModel: LockdownViewModel = hiltViewModel()
+            val lockdownPolicy by lockdownViewModel.policy.collectAsStateWithLifecycle()
+            val lockdownChecking by lockdownViewModel.checking.collectAsStateWithLifecycle()
+
+            LockdownGate(
+                policy = lockdownPolicy,
+                checking = lockdownChecking,
+                onRetry = lockdownViewModel::refresh,
+            )
+
+            // A lock that only applies at launch is not a switch, it is a restart
+            // requirement: the owner flips it and nothing happens until every device
+            // is reopened. One read per foreground keeps it close to immediate.
+            LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+                lockdownViewModel.refresh()
             }
 
             val updateSettingsFlow = remember(observeUpdateSettings) { observeUpdateSettings() }
