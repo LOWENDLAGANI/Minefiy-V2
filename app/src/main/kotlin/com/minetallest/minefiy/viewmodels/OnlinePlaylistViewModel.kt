@@ -27,6 +27,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
+import com.minetallest.minefiy.R
 import com.minetallest.minefiy.constants.HideVideoKey
 import com.minetallest.minefiy.db.MusicDatabase
 import com.minetallest.minefiy.extensions.filterBlockedArtists
@@ -147,7 +148,9 @@ class OnlinePlaylistViewModel
                         continuation = playlistPage.songsContinuation ?: playlistPage.continuation
                         prefetchViewCounts(visibleSongs.map { song -> song.id })
                     }.onFailure { throwable ->
-                        _error.value = throwable.message ?: "Failed to load playlist"
+                        // The throwable goes to the log; the reader gets a line
+                        // they can act on instead of a host name.
+                        _error.value = context.getString(R.string.error_check_connection)
                         reportException(throwable)
                     }
 

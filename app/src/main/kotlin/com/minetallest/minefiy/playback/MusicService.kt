@@ -4919,7 +4919,7 @@ class MusicService :
             return when {
                 code == 404 -> getString(R.string.together_session_not_found)
                 code != null && code in 500..599 -> getString(R.string.together_server_error)
-                else -> t.message ?: getString(R.string.network_unavailable)
+                else -> getString(R.string.network_unavailable)
             }
         }
         val root = generateSequence(t) { it.cause }.lastOrNull() ?: t

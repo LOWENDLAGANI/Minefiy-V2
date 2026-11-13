@@ -10,6 +10,7 @@
 package com.minetallest.minefiy.ui.player
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -42,7 +43,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -130,19 +134,15 @@ fun PlaybackErrorDialog(
                 fallbackMalformedStream
             }
 
-            PlaybackErrorKind.Decoder -> {
-                "$fallbackUnknown ($codeLabel ${error.errorCode})"
-            }
+            // No codes and no exception text in the reader's face: a sentence
+            // they can act on. The diagnostics are still built below and still
+            // reach the clipboard through Copy — they are simply no longer the
+            // first thing on screen.
+            PlaybackErrorKind.Decoder -> fallbackUnknown
 
-            PlaybackErrorKind.Http -> {
-                "$fallbackUnknown ($httpLabel $httpCode)"
-            }
+            PlaybackErrorKind.Http -> stringResource(R.string.error_check_connection)
 
-            PlaybackErrorKind.Unknown -> {
-                error.cause?.message?.takeIf { it.isNotBlank() }
-                    ?: error.message?.takeIf { it.isNotBlank() }
-                    ?: fallbackUnknown
-            }
+            PlaybackErrorKind.Unknown -> stringResource(R.string.error_check_connection)
         }
     val details =
         remember(error, reason, appVersion, httpCode, codeLabel, httpLabel, messageLabel, causeLabel) {
@@ -391,6 +391,12 @@ private fun PlaybackErrorDetails(
     details: String,
     modifier: Modifier = Modifier,
 ) {
+    // Folded until asked for. A code, an HTTP status and a chain of exception
+    // class names answer "what is wrong with the app", which is a question the
+    // reader did not ask; they asked why the song stopped. The block is one tap
+    // away for anyone who does want it, and Copy still carries all of it.
+    var expanded by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -402,7 +408,11 @@ private fun PlaybackErrorDetails(
             color = MaterialTheme.colorScheme.surfaceContainerHighest,
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { expanded = !expanded }
+                        .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
@@ -410,13 +420,15 @@ private fun PlaybackErrorDetails(
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                SelectionContainer {
-                    Text(
-                        text = details,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontFamily = FontFamily.Monospace,
-                    )
+                if (expanded) {
+                    SelectionContainer {
+                        Text(
+                            text = details,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontFamily = FontFamily.Monospace,
+                        )
+                    }
                 }
             }
         }
